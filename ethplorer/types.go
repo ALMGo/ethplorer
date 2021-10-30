@@ -90,3 +90,46 @@ type AddressInfo struct {
 	TokenInfo    TokenInfo    `json:"tokenInfo"`
 	Tokens       []Token      `json:"tokens"`
 }
+
+type Transaction struct {
+	Timestamp       uint64    `json:"timestamp"`
+	TransactionHash string    `json:"transactionHash"`
+	TokenInfo       TokenInfo `json:"tokenInfo"`
+	// transfer, approve, issuance, mint, burn
+	Type    string `json:"type"`
+	Address string `json:"address"`
+	From    string `json:"from"`
+	To      string `json:"to"`
+	Value   string `json:"value"`
+}
+
+type TokenHistory struct {
+	Operations []Transaction `json:"operations"`
+}
+
+type AddressTransaction struct {
+	Timestamp uint64  `json:"timestamp"`
+	From      string  `json:"from"`
+	To        string  `json:"to"`
+	Hash      string  `json:"hash"`
+	Value     float64 `json:"value"`
+	Input     string  `json:"input"`
+	Success   bool    `json:"success"`
+}
+
+type GetTokenHistoryParams struct {
+	Type      string
+	Limit     uint64
+	Timestamp uint64
+}
+
+type GetAddressHistoryParams struct {
+	GetTokenHistoryParams
+	Token string `json:"token"`
+}
+
+type GetAddressTransactionsParams struct {
+	Limit          uint64
+	Timestamp      uint64
+	ShowZeroValues uint64
+}
