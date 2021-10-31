@@ -7,10 +7,13 @@ import (
 
 var client = resty.New()
 
-func GetLastBlock() (uint64, error) {
+func GetLastBlock(apiKey string) (uint64, error) {
+	if apiKey == "" {
+		apiKey = "freekey"
+	}
 	resp, err := client.R().
 		SetQueryParams(map[string]string{
-			"apiKey": "freekey",
+			"apiKey": apiKey,
 		}).
 		SetResult(LastBlock{}).
 		ForceContentType("application/json").

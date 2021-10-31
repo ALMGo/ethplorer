@@ -56,9 +56,9 @@ type TokenInfo struct {
 	Reddit             string     `json:"reddit"`
 	Facebook           string     `json:"facebook"`
 	Coingecko          string     `json:"coingecko"`
-	EthTransferCount   uint64     `json:"ethTransfersCount"`
-	Price              TokenPrice `json:"price"`
-	CountOps           uint64     `json:"countOps"`
+	EthTransferCount uint64     `json:"ethTransfersCount"`
+	Price            TokenPrice `json:"price"`
+	CountOps         uint64     `json:"countOps"`
 	PublicTags         []string   `json:"publicTags"`
 	OpCount            uint64     `json:"opCount"`
 	Added              uint64     `json:"added"`
