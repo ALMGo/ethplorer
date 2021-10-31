@@ -1,14 +1,13 @@
 package ethplorer
 
 import (
-	"fmt"
 	"github.com/go-resty/resty/v2"
 	"strconv"
 )
 
 var client = resty.New()
 
-func GetLastblock() (uint64, error) {
+func GetLastBlock() (uint64, error) {
 	resp, err := client.R().
 		SetQueryParams(map[string]string{
 			"apiKey": "freekey",
@@ -60,16 +59,21 @@ func GetAddressInfo(address string, apiKey string) (*AddressInfo, error) {
 	return result, nil
 }
 
-func GetAddressTokenInfo(address string, token string, apiKey string) (*AddressInfo, error) {
+func GetAddressTokenInfo(address string, params GetAddressTokenInfoParams, apiKey string) (*AddressInfo, error) {
 	if apiKey == "" {
 		apiKey = "freekey"
 	}
+
+	queryParams := make(map[string]string)
+	queryParams["apiKey"] = apiKey
+	queryParams["showETHTotals"] = strconv.FormatBool(params.ShowEthTotals)
+
+	if params.Token != "" {
+		queryParams["token"] = params.Token
+	}
+
 	resp, err := client.R().
-		SetQueryParams(map[string]string{
-			"apiKey": apiKey,
-			"token": token,
-			"showETHTotals": "true",
-		}).
+		SetQueryParams(queryParams).
 		SetResult(AddressInfo{}).
 		ForceContentType("application/json").
 		Get("https://api.ethplorer.io/getAddressInfo/" + address)
@@ -111,7 +115,11 @@ func GetTokenHistory(address string, params GetTokenHistoryParams, apiKey string
 	}
 
 	if params.Limit != 0 {
-		queryParams["limit"] = strconv.FormatUint(params.Limit, 10)
+		limit := params.Limit
+		if limit > 1000 {
+			limit = 1000
+		}
+		queryParams["limit"] = strconv.FormatUint(limit, 10)
 	}
 
 	if params.Type != "" {
@@ -142,7 +150,11 @@ func GetAddressHistory(address string, params GetAddressHistoryParams, apiKey st
 	}
 
 	if params.Limit != 0 {
-		queryParams["limit"] = strconv.FormatUint(params.Limit, 10)
+		limit := params.Limit
+		if limit > 1000 {
+			limit = 1000
+		}
+		queryParams["limit"] = strconv.FormatUint(limit, 10)
 	}
 
 	if params.Type != "" {
@@ -176,11 +188,15 @@ func GetAddressTransactions(address string, params GetAddressTransactionsParams,
 	}
 
 	if params.Limit != 0 {
-		queryParams["limit"] = strconv.FormatUint(params.Limit, 10)
+		limit := params.Limit
+		if limit > 1000 {
+			limit = 1000
+		}
+		queryParams["limit"] = strconv.FormatUint(limit, 10)
 	}
 
-	if params.Limit != 0 {
-		queryParams["limit"] = strconv.FormatUint(params.Limit, 10)
+	if params.ShowZeroValues != 0 {
+		queryParams["showZeroValues"] = strconv.FormatUint(params.ShowZeroValues, 10)
 	}
 
 	resp, err := client.R().
@@ -193,5 +209,134 @@ func GetAddressTransactions(address string, params GetAddressTransactionsParams,
 	}
 
 	result := resp.Result().(*[]AddressTransaction)
+	return result, nil
+}
+
+func GetTopTokens(apiKey string) (*TopTokens, error) {
+	if apiKey == "" {
+		apiKey = "freekey"
+	}
+	resp, err := client.R().
+		SetQueryParams(map[string]string{
+			"apiKey": apiKey,
+		}).
+		SetResult(TopTokens{}).
+		ForceContentType("application/json").
+		Get("https://api.ethplorer.io/getTopTokens/")
+	if err != nil {
+		return nil, err
+	}
+	result := resp.Result().(*TopTokens)
+	return result, nil
+}
+
+func GetTop(params GetTopParams, apiKey string) (*TopTokens, error) {
+	if apiKey == "" {
+		apiKey = "freekey"
+	}
+	queryParams := make(map[string]string)
+	queryParams["apiKey"] = apiKey
+	if params.Criteria != "" {
+		queryParams["criteria"] = params.Criteria
+	}
+
+	if params.Limit != 0 {
+		limit := params.Limit
+		if limit > 1000 {
+			limit = 1000
+		}
+		queryParams["limit"] = strconv.FormatUint(limit, 10)
+	}
+
+	resp, err := client.R().
+		SetQueryParams(queryParams).
+		SetResult(TopTokens{}).
+		ForceContentType("application/json").
+		Get("https://api.ethplorer.io/getTopTokens/")
+	if err != nil {
+		return nil, err
+	}
+	result := resp.Result().(*TopTokens)
+	return result, nil
+}
+
+func GetTopTokenHolders(address string, params GetTopTokenHoldersParams, apiKey string) (*TopTokenHolders, error) {
+	if apiKey == "" {
+		apiKey = "freekey"
+	}
+	queryParams := make(map[string]string)
+	queryParams["apiKey"] = apiKey
+
+	if params.Limit != 0 {
+		limit := params.Limit
+		if limit > 1000 {
+			limit = 1000
+		}
+		queryParams["limit"] = strconv.FormatUint(limit, 10)
+	}
+
+	resp, err := client.R().
+		SetQueryParams(queryParams).
+		SetResult(TopTokenHolders{}).
+		ForceContentType("application/json").
+		Get("https://api.ethplorer.io/getTopTokenHolders/" + address)
+	if err != nil {
+		return nil, err
+	}
+	result := resp.Result().(*TopTokenHolders)
+	return result, nil
+}
+
+func GetTokenDailyTransactionCounts(address string, params GetTokenHistoryGroupedParams, apiKey string) (*TokenDailyTransactionCounts, error) {
+	if apiKey == "" {
+		apiKey = "freekey"
+	}
+	queryParams := make(map[string]string)
+	queryParams["apiKey"] = apiKey
+
+	if params.Period != 0 {
+		period := params.Period
+		if period > 90 {
+			period = 90
+		}
+		queryParams["period"] = strconv.FormatUint(period, 10)
+	}
+
+	resp, err := client.R().
+		SetQueryParams(queryParams).
+		SetResult(TokenDailyTransactionCounts{}).
+		ForceContentType("application/json").
+		Get("https://api.ethplorer.io/getTokenHistoryGrouped/" + address)
+	if err != nil {
+		return nil, err
+	}
+	result := resp.Result().(*TokenDailyTransactionCounts)
+	return result, nil
+}
+
+func GetTokenDailyPriceHistory(address string, params GetTokenHistoryGroupedParams, apiKey string) (*TokenDailyPriceHistory, error) {
+	if apiKey == "" {
+		apiKey = "freekey"
+	}
+	queryParams := make(map[string]string)
+	queryParams["apiKey"] = apiKey
+
+	if params.Period != 0 {
+		period := params.Period
+		if period > 90 {
+			period = 90
+		}
+		queryParams["period"] = strconv.FormatUint(period, 10)
+	}
+
+	resp, err := client.R().
+		SetQueryParams(queryParams).
+		SetResult(TokenDailyPriceHistory{}).
+		ForceContentType("application/json").
+		Get("https://api.ethplorer.io/getTokenPriceHistoryGrouped/" + address)
+	if err != nil {
+		return nil, err
+	}
+	result := resp.Result().(*TokenDailyPriceHistory)
 	return result, nil
 }
