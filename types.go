@@ -59,7 +59,7 @@ func (w *TokenPrice) UnmarshalJSON(data []byte) error {
 type TokenInfo struct {
 	Address            string     `json:"address"`
 	Name               string     `json:"name"`
-	Decimals           string     `json:"decimals"'`
+	Decimals           uint64     `json:"decimals"'`
 	Symbol             string     `json:"symbol"`
 	TotalSupply        string     `json:"totalSupply"`
 	Owner              string     `json:"owner"`
