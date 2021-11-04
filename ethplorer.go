@@ -113,8 +113,8 @@ func GetTokenHistory(address string, params GetTokenHistoryParams, apiKey string
 	queryParams := make(map[string]string)
 	queryParams["apiKey"] = apiKey
 
-	if params.Timestamp != 0 {
-		queryParams["timestamp"] = strconv.FormatUint(params.Timestamp, 10)
+	if  !params.Timestamp.IsZero() {
+		queryParams["timestamp"] = strconv.FormatInt(params.Timestamp.UnixNano(), 10)
 	}
 
 	if params.Limit != 0 {
@@ -148,8 +148,8 @@ func GetAddressHistory(address string, params GetAddressHistoryParams, apiKey st
 	queryParams := make(map[string]string)
 	queryParams["apiKey"] = apiKey
 
-	if params.Timestamp != 0 {
-		queryParams["timestamp"] = strconv.FormatUint(params.Timestamp, 10)
+	if !params.Timestamp.IsZero() {
+		queryParams["timestamp"] = strconv.FormatInt(params.Timestamp.UnixNano(), 10)
 	}
 
 	if params.Limit != 0 {
@@ -186,8 +186,8 @@ func GetAddressTransactions(address string, params GetAddressTransactionsParams,
 	}
 	queryParams := make(map[string]string)
 	queryParams["apiKey"] = apiKey
-	if params.Timestamp != 0 {
-		queryParams["timestamp"] = strconv.FormatUint(params.Timestamp, 10)
+	if !params.Timestamp.IsZero() {
+		queryParams["timestamp"] = strconv.FormatInt(params.Timestamp.UnixNano(), 10)
 	}
 
 	if params.Limit != 0 {
