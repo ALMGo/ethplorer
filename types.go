@@ -136,7 +136,7 @@ type Operations struct {
 	Address string `json:"address"`
 	From    string `json:"from"`
 	To      string `json:"to"`
-	Value   string `json:"value"`
+	Value   uint64 `json:"value"`
 }
 
 type TokenHistory struct {
