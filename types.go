@@ -2,8 +2,30 @@ package ethplorer
 
 import (
 	"encoding/json"
+	"fmt"
 	"strconv"
+	"time"
 )
+
+type Timestamp struct {
+	time.Time
+}
+
+// UnmarshalJSON decodes an int64 timestamp into a time.Time object
+func (p *Timestamp) UnmarshalJSON(bytes []byte) error {
+	// 1. Decode the bytes into an int64
+	var raw int64
+	err := json.Unmarshal(bytes, &raw)
+
+	if err != nil {
+		fmt.Printf("error decoding timestamp: %s\n", err)
+		return err
+	}
+
+	// 2 - Parse the unix timestamp
+	*&p.Time = time.Unix(raw, 0)
+	return nil
+}
 
 type LastBlock struct {
 	LastBlock uint64 `json:"lastBlock"`
@@ -56,9 +78,9 @@ type TokenInfo struct {
 	Reddit             string     `json:"reddit"`
 	Facebook           string     `json:"facebook"`
 	Coingecko          string     `json:"coingecko"`
-	EthTransferCount uint64     `json:"ethTransfersCount"`
-	Price            TokenPrice `json:"price"`
-	CountOps         uint64     `json:"countOps"`
+	EthTransferCount   uint64     `json:"ethTransfersCount"`
+	Price              TokenPrice `json:"price"`
+	CountOps           uint64     `json:"countOps"`
 	PublicTags         []string   `json:"publicTags"`
 	OpCount            uint64     `json:"opCount"`
 	Added              uint64     `json:"added"`
@@ -71,12 +93,14 @@ type TokenFinancials struct {
 	TotalOut   float64 `json:"totalOut"`
 }
 
+type Holders struct {
+	Address string  `json:"address"`
+	Balance float64 `json:"balance"`
+	Share   float64 `json:"share"`
+}
+
 type TopTokenHolders struct {
-	Holders []struct {
-		Address string  `json:"address"`
-		Balance float64 `json:"balance"`
-		Share   float64 `json:"share"`
-	} `json:"holders"`
+	Holders []Holders `json:"holders"`
 }
 
 type ETH struct {
@@ -85,9 +109,9 @@ type ETH struct {
 }
 
 type ContractInfo struct {
-	CreatorHash     string `json:"creatorHash"`
-	TransactionHash string `json:"transactionHash"`
-	Timestamp       uint64 `json:"timestamp"`
+	CreatorHash     string    `json:"creatorHash"`
+	TransactionHash string    `json:"transactionHash"`
+	Timestamp       Timestamp `json:"timestamp"`
 }
 
 type Token struct {
@@ -103,28 +127,30 @@ type AddressInfo struct {
 	Tokens       []Token      `json:"tokens"`
 }
 
+type Operations struct {
+	Timestamp       Timestamp `json:"timestamp"`
+	TransactionHash string    `json:"transactionHash"`
+	TokenInfo       TokenInfo `json:"tokenInfo"`
+	// transfer, approve, issuance, mint, burn
+	Type    string `json:"type"`
+	Address string `json:"address"`
+	From    string `json:"from"`
+	To      string `json:"to"`
+	Value   string `json:"value"`
+}
+
 type TokenHistory struct {
-	Operations []struct {
-		Timestamp       uint64    `json:"timestamp"`
-		TransactionHash string    `json:"transactionHash"`
-		TokenInfo       TokenInfo `json:"tokenInfo"`
-		// transfer, approve, issuance, mint, burn
-		Type    string `json:"type"`
-		Address string `json:"address"`
-		From    string `json:"from"`
-		To      string `json:"to"`
-		Value   string `json:"value"`
-	} `json:"operations"`
+	Operations []Operations `json:"operations"`
 }
 
 type AddressTransaction struct {
-	Timestamp uint64  `json:"timestamp"`
-	From      string  `json:"from"`
-	To        string  `json:"to"`
-	Hash      string  `json:"hash"`
-	Value     float64 `json:"value"`
-	Input     string  `json:"input"`
-	Success   bool    `json:"success"`
+	Timestamp Timestamp `json:"timestamp"`
+	From      string    `json:"from"`
+	To        string    `json:"to"`
+	Hash      string    `json:"hash"`
+	Value     float64   `json:"value"`
+	Input     string    `json:"input"`
+	Success   bool      `json:"success"`
 }
 
 type TopTokens struct {
@@ -135,36 +161,44 @@ type TopTokens struct {
 type GetTokenHistoryParams struct {
 	Type      string
 	Limit     uint64
-	Timestamp uint64
+	Timestamp Timestamp
+}
+
+type TransactionDate struct {
+	Year  uint64 `json:"year"`
+	Month uint64 `json:"month"`
+	Day   uint64 `json:"day"`
+}
+
+type CountTxs struct {
+	Id  TransactionDate `json:"_id"`
+	Ts  uint64          `json:"ts"`
+	Cnt uint64          `json:"cnt"`
 }
 
 type TokenDailyTransactionCounts struct {
-	CountTxs []struct {
-		Id struct {
-			Year  uint64 `json:"year"`
-			Month uint64 `json:"month"`
-			Day   uint64 `json:"day"`
-		} `json:"_id"`
-		Ts  uint64 `json:"ts"`
-		Cnt uint64 `json:"cnt"`
-	} `json:"countTxs"`
+	CountTxs []CountTxs `json:"countTxs"`
+}
+
+type Price struct {
+	Ts        uint64  `json:"ts"`
+	Date      string  `json:"date"`
+	Open      float64 `json:"open"`
+	Close     float64 `json:"close"`
+	High      float64 `json:"high"`
+	Low       float64 `json:"low"`
+	Volume    float64 `json:"volume"`
+	VolumeUSD float64 `json:"volumeConverted"`
+	Average   float64 `json:"average"`
+}
+
+type History struct {
+	TokenDailyTransactionCounts
+	Prices []Price `json:"prices"`
 }
 
 type TokenDailyPriceHistory struct {
-	History struct {
-		TokenDailyTransactionCounts
-		Prices []struct {
-			Ts        uint64  `json:"ts"`
-			Date      string  `json:"date"`
-			Open      float64 `json:"open"`
-			Close     float64 `json:"close"`
-			High      float64 `json:"high"`
-			Low       float64 `json:"low"`
-			Volume    float64 `json:"volume"`
-			VolumeUSD float64 `json:"volumeConverted"`
-			Average   float64 `json:"average"`
-		} `json:"prices"`
-	} `json:"history"`
+	History History `json:"history"`
 }
 
 type GetAddressHistoryParams struct {
@@ -174,7 +208,7 @@ type GetAddressHistoryParams struct {
 
 type GetAddressTransactionsParams struct {
 	Limit          uint64
-	Timestamp      uint64
+	Timestamp      Timestamp
 	ShowZeroValues uint64
 }
 
