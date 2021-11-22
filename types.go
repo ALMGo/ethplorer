@@ -158,12 +158,6 @@ type TopTokens struct {
 	OpCount uint64      `json:"opCount"`
 }
 
-type GetTokenHistoryParams struct {
-	Type      string
-	Limit     uint64
-	Timestamp Timestamp
-}
-
 type TransactionDate struct {
 	Year  uint64 `json:"year"`
 	Month uint64 `json:"month"`
@@ -198,7 +192,9 @@ type TokenDailyPriceHistory struct {
 }
 
 type GetAddressHistoryParams struct {
-	GetTokenHistoryParams
+	Type      string
+	Limit     uint64
+	Timestamp Timestamp
 	Token string `json:"token"`
 }
 
