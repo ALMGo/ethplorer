@@ -115,8 +115,8 @@ type ContractInfo struct {
 }
 
 type Token struct {
-	TokenFinancials
 	TokenInfo TokenInfo `json:"tokenInfo"`
+	TokenFinancials
 }
 
 type AddressInfo struct {
@@ -157,6 +157,12 @@ type TopTokens struct {
 	OpCount uint64      `json:"opCount"`
 }
 
+type GetTokenHistoryParams struct {
+	Type      string
+	Limit     uint64
+	Timestamp Timestamp
+}
+
 type TransactionDate struct {
 	Year  uint64 `json:"year"`
 	Month uint64 `json:"month"`
@@ -167,6 +173,10 @@ type CountTxs struct {
 	Id  TransactionDate `json:"_id"`
 	Ts  uint64          `json:"ts"`
 	Cnt uint64          `json:"cnt"`
+}
+
+type TokenDailyTransactionCounts struct {
+	CountTxs []CountTxs `json:"countTxs"`
 }
 
 type Price struct {
@@ -182,8 +192,8 @@ type Price struct {
 }
 
 type History struct {
-	CountTxs []CountTxs `json:"countTxs"`
-	Prices   []Price    `json:"prices"`
+	TokenDailyTransactionCounts
+	Prices []Price `json:"prices"`
 }
 
 type TokenDailyPriceHistory struct {
@@ -191,10 +201,8 @@ type TokenDailyPriceHistory struct {
 }
 
 type GetAddressHistoryParams struct {
-	Type      string
-	Limit     uint64
-	Timestamp Timestamp
-	Token     string `json:"token"`
+	GetTokenHistoryParams
+	Token string `json:"token"`
 }
 
 type GetAddressTransactionsParams struct {
