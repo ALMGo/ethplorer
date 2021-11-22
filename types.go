@@ -115,8 +115,8 @@ type ContractInfo struct {
 }
 
 type Token struct {
-	TokenInfo TokenInfo `json:"tokenInfo"`
 	TokenFinancials
+	TokenInfo TokenInfo `json:"tokenInfo"`
 }
 
 type AddressInfo struct {
@@ -131,12 +131,11 @@ type Operations struct {
 	Timestamp       Timestamp `json:"timestamp"`
 	TransactionHash string    `json:"transactionHash"`
 	TokenInfo       TokenInfo `json:"tokenInfo"`
-	// transfer, approve, issuance, mint, burn
-	Type    string `json:"type"`
-	Address string `json:"address"`
-	From    string `json:"from"`
-	To      string `json:"to"`
-	Value   uint64 `json:"value,string"`
+	Type            string    `json:"type"` // transfer, approve, issuance, mint, burn
+	Address         string    `json:"address"`
+	From            string    `json:"from"`
+	To              string    `json:"to"`
+	Value           uint64    `json:"value,string"`
 }
 
 type TokenHistory struct {
@@ -184,7 +183,7 @@ type Price struct {
 
 type History struct {
 	CountTxs []CountTxs `json:"countTxs"`
-	Prices []Price `json:"prices"`
+	Prices   []Price    `json:"prices"`
 }
 
 type TokenDailyPriceHistory struct {
@@ -195,7 +194,7 @@ type GetAddressHistoryParams struct {
 	Type      string
 	Limit     uint64
 	Timestamp Timestamp
-	Token string `json:"token"`
+	Token     string `json:"token"`
 }
 
 type GetAddressTransactionsParams struct {
