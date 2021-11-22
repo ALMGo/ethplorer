@@ -176,10 +176,6 @@ type CountTxs struct {
 	Cnt uint64          `json:"cnt"`
 }
 
-type TokenDailyTransactionCounts struct {
-	CountTxs []CountTxs `json:"countTxs"`
-}
-
 type Price struct {
 	Ts        uint64  `json:"ts"`
 	Date      string  `json:"date"`
@@ -193,7 +189,7 @@ type Price struct {
 }
 
 type History struct {
-	TokenDailyTransactionCounts
+	CountTxs []CountTxs `json:"countTxs"`
 	Prices []Price `json:"prices"`
 }
 
