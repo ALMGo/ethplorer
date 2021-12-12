@@ -240,6 +240,7 @@ func GetTopTokens(apiKey string) (*TopTokens, error) {
 	return result, nil
 }
 
+// TODO: delete todo
 func GetTop(params GetTopParams, apiKey string) (*TopTokens, error) {
 	if apiKey == "" {
 		apiKey = "freekey"
@@ -270,6 +271,7 @@ func GetTop(params GetTopParams, apiKey string) (*TopTokens, error) {
 	return result, nil
 }
 
+// TODO: delete todo
 func GetTopTokenHolders(address string, limit uint64, apiKey string) (*TopTokenHolders, error) {
 	if apiKey == "" {
 		apiKey = "freekey"
@@ -296,6 +298,7 @@ func GetTopTokenHolders(address string, limit uint64, apiKey string) (*TopTokenH
 	return result, nil
 }
 
+// TODO: delete todo
 func GetTokenDailyTransactionCounts(address string, period uint64, apiKey string) (*TokenDailyTransactionCounts, error) {
 	if apiKey == "" {
 		apiKey = "freekey"
