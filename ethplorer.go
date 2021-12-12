@@ -7,6 +7,7 @@ import (
 
 var client = resty.New()
 
+// TODO: delete todo
 func GetLastBlock(apiKey string) (uint64, error) {
 	if apiKey == "" {
 		apiKey = "freekey"
@@ -25,6 +26,7 @@ func GetLastBlock(apiKey string) (uint64, error) {
 	return result.LastBlock, nil
 }
 
+// TODO: delete todo
 func GetTokenInfo(address string, apiKey string) (*TokenInfo, error) {
 	if apiKey == "" {
 		apiKey = "freekey"
@@ -43,6 +45,7 @@ func GetTokenInfo(address string, apiKey string) (*TokenInfo, error) {
 	return result, nil
 }
 
+// TODO: delete todo
 func GetAddressInfo(address string, apiKey string) (*AddressInfo, error) {
 	if apiKey == "" {
 		apiKey = "freekey"
@@ -62,6 +65,7 @@ func GetAddressInfo(address string, apiKey string) (*AddressInfo, error) {
 	return result, nil
 }
 
+// TODO: delete todo
 func GetAddressTokenInfo(address string, params GetAddressTokenInfoParams, apiKey string) (*AddressInfo, error) {
 	if apiKey == "" {
 		apiKey = "freekey"
@@ -87,6 +91,7 @@ func GetAddressTokenInfo(address string, params GetAddressTokenInfoParams, apiKe
 	return result, nil
 }
 
+// TODO: delete todo
 func GetTokensNew(apiKey string) (*[]TokenInfo, error) {
 	if apiKey == "" {
 		apiKey = "freekey"
@@ -105,6 +110,7 @@ func GetTokensNew(apiKey string) (*[]TokenInfo, error) {
 	return result, nil
 }
 
+// TODO: delete todo
 func GetTokenHistory(address string, params GetTokenHistoryParams, apiKey string) (*TokenHistory, error) {
 	if apiKey == "" {
 		apiKey = "freekey"
@@ -172,7 +178,7 @@ func GetAddressHistory(address string, params GetAddressHistoryParams, apiKey st
 		SetQueryParams(queryParams).
 		SetResult(TokenHistory{}).
 		ForceContentType("application/json").
-		Get("https://api.ethplorer.io/getTokenHistory/" + address)
+		Get("https://api.ethplorer.io/getAddressHistory/" + address)
 	if err != nil {
 		return nil, err
 	}
@@ -263,15 +269,14 @@ func GetTop(params GetTopParams, apiKey string) (*TopTokens, error) {
 	return result, nil
 }
 
-func GetTopTokenHolders(address string, params GetTopTokenHoldersParams, apiKey string) (*TopTokenHolders, error) {
+func GetTopTokenHolders(address string, limit uint64, apiKey string) (*TopTokenHolders, error) {
 	if apiKey == "" {
 		apiKey = "freekey"
 	}
 	queryParams := make(map[string]string)
 	queryParams["apiKey"] = apiKey
 
-	if params.Limit != 0 {
-		limit := params.Limit
+	if limit != 0 {
 		if limit > 1000 {
 			limit = 1000
 		}
@@ -290,15 +295,14 @@ func GetTopTokenHolders(address string, params GetTopTokenHoldersParams, apiKey 
 	return result, nil
 }
 
-func GetTokenDailyTransactionCounts(address string, params GetTokenHistoryGroupedParams, apiKey string) (*TokenDailyTransactionCounts, error) {
+func GetTokenDailyTransactionCounts(address string, period uint64, apiKey string) (*TokenDailyTransactionCounts, error) {
 	if apiKey == "" {
 		apiKey = "freekey"
 	}
 	queryParams := make(map[string]string)
 	queryParams["apiKey"] = apiKey
 
-	if params.Period != 0 {
-		period := params.Period
+	if period != 0 {
 		if period > 90 {
 			period = 90
 		}
@@ -317,15 +321,14 @@ func GetTokenDailyTransactionCounts(address string, params GetTokenHistoryGroupe
 	return result, nil
 }
 
-func GetTokenDailyPriceHistory(address string, params GetTokenHistoryGroupedParams, apiKey string) (*TokenDailyPriceHistory, error) {
+func GetTokenDailyPriceHistory(address string, period uint64, apiKey string) (*TokenDailyPriceHistory, error) {
 	if apiKey == "" {
 		apiKey = "freekey"
 	}
 	queryParams := make(map[string]string)
 	queryParams["apiKey"] = apiKey
 
-	if params.Period != 0 {
-		period := params.Period
+	if period != 0 {
 		if period > 90 {
 			period = 90
 		}

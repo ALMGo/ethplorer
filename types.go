@@ -73,7 +73,7 @@ type TokenInfo struct {
 	Image              string     `json:"image"`
 	Description        string     `json:"description"`
 	Website            string     `json:"website"`
-	Telegram           string     `json:"talagram"`
+	Telegram           string     `json:"telegram"`
 	Twitter            string     `json:"twitter"`
 	Reddit             string     `json:"reddit"`
 	Facebook           string     `json:"facebook"`
@@ -216,15 +216,7 @@ type GetTopParams struct {
 	Criteria string
 }
 
-type GetTopTokenHoldersParams struct {
-	Limit uint64
-}
-
 type GetAddressTokenInfoParams struct {
 	Token         string
 	ShowEthTotals bool
-}
-
-type GetTokenHistoryGroupedParams struct {
-	Period uint64 `json:"period"`
 }
