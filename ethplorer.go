@@ -147,6 +147,7 @@ func GetTokenHistory(address string, params GetTokenHistoryParams, apiKey string
 	return result, nil
 }
 
+// TODO: delete todo
 func GetAddressHistory(address string, params GetAddressHistoryParams, apiKey string) (*TokenHistory, error) {
 	if apiKey == "" {
 		apiKey = "freekey"
@@ -204,9 +205,7 @@ func GetAddressTransactions(address string, params GetAddressTransactionsParams,
 		queryParams["limit"] = strconv.FormatUint(limit, 10)
 	}
 
-	if params.ShowZeroValues != 0 {
-		queryParams["showZeroValues"] = strconv.FormatUint(params.ShowZeroValues, 10)
-	}
+	queryParams["showZeroValues"] = strconv.FormatBool(params.ShowZeroValues)
 
 	resp, err := client.R().
 		SetQueryParams(queryParams).

@@ -208,7 +208,7 @@ type GetAddressHistoryParams struct {
 type GetAddressTransactionsParams struct {
 	Limit          uint64
 	Timestamp      Timestamp
-	ShowZeroValues uint64
+	ShowZeroValues bool
 }
 
 type GetTopParams struct {
