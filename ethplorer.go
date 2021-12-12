@@ -187,6 +187,7 @@ func GetAddressHistory(address string, params GetAddressHistoryParams, apiKey st
 	return result, nil
 }
 
+// TODO: delete todo
 func GetAddressTransactions(address string, params GetAddressTransactionsParams, apiKey string) (*[]AddressTransaction, error) {
 	if apiKey == "" {
 		apiKey = "freekey"
@@ -220,6 +221,7 @@ func GetAddressTransactions(address string, params GetAddressTransactionsParams,
 	return result, nil
 }
 
+// TODO: delete todo
 func GetTopTokens(apiKey string) (*TopTokens, error) {
 	if apiKey == "" {
 		apiKey = "freekey"
@@ -260,7 +262,7 @@ func GetTop(params GetTopParams, apiKey string) (*TopTokens, error) {
 		SetQueryParams(queryParams).
 		SetResult(TopTokens{}).
 		ForceContentType("application/json").
-		Get("https://api.ethplorer.io/getTopTokens/")
+		Get("https://api.ethplorer.io/getTop/")
 	if err != nil {
 		return nil, err
 	}
